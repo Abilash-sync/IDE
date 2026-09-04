@@ -1,0 +1,455 @@
+<!-- ## This is from .github/copilot-instructions.md -->
+<!-- ## This is from .codestudio/codestudio-instructions.md -->
+<!-- ## AGENTS_MD_VERIFIED ## -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDE — Repository</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0f;
+      --surface:   #111118;
+      --border:    #1f1f2e;
+      --accent:    #e8ff47;
+      --accent2:   #47ffe8;
+      --muted:     #4a4a6a;
+      --text:      #e2e2f0;
+      --text-dim:  #8888aa;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 40px);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 6vw 4rem;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70vw;
+      height: 70vw;
+      max-width: 800px;
+      max-height: 800px;
+      background: radial-gradient(circle at 60% 40%, rgba(232,255,71,0.08) 0%, rgba(71,255,232,0.04) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.35rem 0.85rem;
+      border-radius: 2px;
+      margin-bottom: 2.5rem;
+      width: fit-content;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 1.4s ease infinite; }
+
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(5rem, 16vw, 14rem);
+      font-weight: 800;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-title .stroke {
+      -webkit-text-stroke: 2px var(--accent);
+      color: transparent;
+    }
+
+    .hero-sub {
+      margin-top: 3rem;
+      max-width: 520px;
+      font-size: 0.85rem;
+      line-height: 1.9;
+      color: var(--text-dim);
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 3.5rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .meta-value {
+      font-size: 0.85rem;
+      color: var(--accent2);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      position: relative;
+      z-index: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+      margin: 0 6vw;
+    }
+
+    /* ── Sections ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 6vw;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .section-label::before {
+      content: '//  ';
+      color: var(--accent);
+    }
+
+    /* ── Cards grid ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+
+    .card {
+      background: var(--surface);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s;
+    }
+
+    .card:hover { background: #16161f; }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover::before { transform: scaleX(1); }
+
+    .card-num {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-body {
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: var(--text-dim);
+    }
+
+    /* ── Files section ── */
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .file-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      cursor: default;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .file-row:hover {
+      background: #15151e;
+      border-color: var(--accent2);
+    }
+
+    .file-icon { color: var(--accent); font-size: 0.9rem; width: 1.2rem; text-align: center; }
+    .file-name { flex: 1; color: var(--text); letter-spacing: 0.03em; }
+    .file-desc { color: var(--text-dim); font-size: 0.72rem; text-align: right; }
+
+    /* ── CTA strip ── */
+    .cta-strip {
+      position: relative;
+      z-index: 1;
+      padding: 4rem 6vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-text {
+      font-family: var(--font-head);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .cta-text em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232,255,71,0.25);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent2);
+      border: 1px solid var(--accent2);
+    }
+
+    .btn-ghost:hover { box-shadow: 0 8px 32px rgba(71,255,232,0.15); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 2.5rem 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero { padding: 5rem 5vw 3rem; }
+      .cta-strip { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="badge"><span></span> Repository Documentation</div>
+
+    <h1 class="hero-title">
+      I<span class="stroke">D</span>E
+    </h1>
+
+    <p class="hero-sub">
+      A focused development environment repository. Organised, versioned, and built for clean iteration — from initial branch setup through to final delivery.
+    </p>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Repository</span>
+        <span class="meta-value">IDE</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Branch</span>
+        <span class="meta-value">main</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">Active</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── About ── -->
+  <section class="section">
+    <p class="section-label">Overview</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">01</div>
+        <div class="card-title">Branch Information</div>
+        <div class="card-body">
+          Tracks branch-level metadata and documentation. Each branch records its creation context and purpose for clear traceability across the project lifecycle.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <div class="card-title">Final Deliverables</div>
+        <div class="card-body">
+          Committed and verified final artefacts are documented under the <code style="color:var(--accent);font-size:0.75em">final.md</code> entry — capturing repository name, target branch, and timestamp.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <div class="card-title">Version Control</div>
+        <div class="card-body">
+          Git-powered history ensures every change is attributed and reversible. Feature branches are preferred over direct commits to protected branches.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── File listing ── -->
+  <section class="section">
+    <p class="section-label">Repository Files</p>
+    <div class="file-list">
+      <div class="file-row">
+        <span class="file-icon">📄</span>
+        <span class="file-name">README.md</span>
+        <span class="file-desc">Project root documentation</span>
+      </div>
+      <div class="file-row">
+        <span class="file-icon">🌿</span>
+        <span class="file-name">branch.md</span>
+        <span class="file-desc">Branch metadata &amp; creation details</span>
+      </div>
+      <div class="file-row">
+        <span class="file-icon">✅</span>
+        <span class="file-name">final.md</span>
+        <span class="file-desc">Final commit summary — branch &amp; date</span>
+      </div>
+      <div class="file-row">
+        <span class="file-icon">🌐</span>
+        <span class="file-name">index.html</span>
+        <span class="file-desc">This page — generated from README</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA strip ── -->
+  <div class="cta-strip">
+    <p class="cta-text">Explore the <em>IDE</em> repository.</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+      <a class="btn" href="https://github.com/Abilash-sync/IDE" target="_blank" rel="noopener">
+        ↗ View on GitHub
+      </a>
+      <a class="btn btn-ghost" href="README.md" target="_blank">
+        ⬡ README.md
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span>IDE Repository &copy; 2025</span>
+    <span>Generated from README.md</span>
+  </footer>
+
+</body>
+</html>
