@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>📊 My Dashboard</h1>
+                <p class="subtitle">Manage your tasks and items</p>
+            </div>
+        </header>
+
+        <!-- Search and Controls -->
+        <div class="dashboard-controls">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search items..." 
+                    class="search-input"
+                >
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+        </div>
+
+        <!-- Add New Item -->
+        <div class="add-item-section">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="itemInput" 
+                    placeholder="Add a new item..." 
+                    class="item-input"
+                >
+                <input 
+                    type="text" 
+                    id="descriptionInput" 
+                    placeholder="Description (optional)" 
+                    class="item-input"
+                >
+                <button id="addBtn" class="btn-add">+ Add Item</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <span class="stat-label">Total Items</span>
+                <span class="stat-value" id="totalItems">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Completed</span>
+                <span class="stat-value" id="completedItems">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active</span>
+                <span class="stat-value" id="activeItems">0</span>
+            </div>
+        </div>
+
+        <!-- Dashboard List -->
+        <div class="dashboard-list-section">
+            <div class="list-header">
+                <h2>Items</h2>
+                <span class="item-count" id="itemCount">(0)</span>
+            </div>
+            <div id="dashboardList" class="dashboard-list">
+                <div class="empty-state">
+                    <p>✨ No items yet. Add one to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
