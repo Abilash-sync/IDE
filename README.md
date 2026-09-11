@@ -1,6 +1,6 @@
-# Dashboard List Application
+# Dashboard List Application & Timer
 
-A modern, responsive, and interactive dashboard list application built with vanilla HTML, CSS, and JavaScript. Manage your tasks efficiently with a beautiful user interface and persistent storage.
+A modern, responsive, and interactive dashboard list application built with vanilla HTML, CSS, and JavaScript. Manage your tasks efficiently with a beautiful user interface and persistent storage. Now includes a feature-rich timer application for time tracking and productivity.
 
 ## 🌟 About This Project
 
@@ -17,6 +17,7 @@ The Dashboard List Application is a lightweight, feature-rich task management to
 
 - [Quick Start](#-quick-start)
 - [Features](#features)
+- [Timer Application](#⏱️-timer-application)
 - [Overview](#overview)
 - [File Structure](#file-structure)
 - [Getting Started](#getting-started)
@@ -63,6 +64,30 @@ The Dashboard List Application is a lightweight, feature-rich task management to
 - **Local Storage API**: Items persist between browser sessions
 - **Keyboard Support**: Press Enter to quickly add items
 - **Modular Functions**: Clear separation of concerns
+
+---
+
+## ⏱️ Timer Application
+
+We've added a dedicated timer application to complement the dashboard. The timer is a standalone, fully-featured countdown timer perfect for time management, productivity sessions, and task timing.
+
+### Timer Features
+- **Preset Timers**: Quick 1, 5, 10, and 30-minute presets
+- **Custom Time Input**: Set any minutes and seconds combination
+- **Start/Pause/Resume Controls**: Full timer control with pause functionality
+- **Progress Visualization**: Visual progress bar shows elapsed time
+- **Sound Notification**: Audio alert when timer completes
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
+- **Real-time Display**: Large, easy-to-read time display with hours:minutes:seconds format
+- **Status Indicators**: Shows timer state (Ready, Running, Paused, Time's up)
+
+### How to Use the Timer
+1. Open `timer.html` in your web browser
+2. Choose a preset (1, 5, 10, or 30 minutes) or enter custom minutes and seconds
+3. Click **Start** to begin the countdown
+4. Use **Pause** to temporarily stop, or **Resume** to continue
+5. Click **Reset** to clear and start over
+6. Receive an audio notification when time's up!
 
 ---
 
@@ -120,24 +145,35 @@ The Dashboard List Application is a task management tool designed to help users 
 ## 📁 File Structure
 
 ```
-dashboard-list/
-├── index.html          # Main HTML file with structure and markup
-├── style.css           # CSS styling and responsive design
-├── script.js           # JavaScript logic and interactivity
+project/
+├── index.html          # Main dashboard list HTML file
+├── timer.html          # Timer application HTML file
+├── styles.css          # CSS styling for dashboard (shared styles)
+├── script.js           # JavaScript logic for dashboard
 └── README.md           # This documentation file
 ```
 
 ### File Descriptions
 
 #### `index.html`
-Contains the complete HTML structure including:
+Contains the complete HTML structure for the dashboard including:
 - Input form for adding new items
 - Search and filter controls
 - Statistics dashboard
 - Main list container
 - CSS and JavaScript imports
 
-#### `style.css`
+#### `timer.html`
+Standalone timer application featuring:
+- Large countdown display with hours:minutes:seconds format
+- Preset timer buttons (1, 5, 10, 30 minutes)
+- Custom time input fields
+- Start, Pause, Resume, and Reset controls
+- Progress bar visualization
+- Audio notification on completion
+- Fully self-contained (HTML + embedded CSS and JavaScript)
+
+#### `styles.css`
 Includes:
 - Modern gradient theme with purple color scheme
 - Responsive grid and flexbox layouts
