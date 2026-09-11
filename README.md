@@ -1,14 +1,19 @@
-# Dashboard List Application
+# Dashboard List Application & Calculator
 
-A modern, responsive, and interactive dashboard list application built with vanilla HTML, CSS, and JavaScript. Manage your tasks efficiently with a beautiful user interface and persistent storage.
+A modern, responsive, and interactive collection of web applications built with vanilla HTML, CSS, and JavaScript. Manage your tasks efficiently and perform calculations with beautiful user interfaces and persistent storage.
 
 ## 🌟 About This Project
 
-The Dashboard List Application is a lightweight, feature-rich task management tool designed to help users organize and track their daily activities. Built entirely with vanilla JavaScript (no frameworks or dependencies), this project demonstrates modern web development practices including DOM manipulation, local storage management, responsive design, and interactive user interfaces.
+This is a collection of lightweight, feature-rich vanilla JavaScript applications designed to demonstrate modern web development practices. The project includes:
+
+1. **Dashboard List Application** - A task management tool to organize and track your daily activities
+2. **Calculator Application** - A full-featured calculator with history tracking
+
+Built entirely with vanilla JavaScript (no frameworks or dependencies), these projects showcase DOM manipulation, local storage management, responsive design, and interactive user interfaces.
 
 **Perfect for:**
 - Learning vanilla JavaScript fundamentals
-- Creating personal task management systems
+- Creating personal productivity tools
 - Quick project setup without build tools
 - Understanding responsive web design
 - Exploring local storage persistence
@@ -16,6 +21,7 @@ The Dashboard List Application is a lightweight, feature-rich task management to
 ## 📋 Table of Contents
 
 - [Quick Start](#-quick-start)
+- [Applications](#applications)
 - [Features](#features)
 - [Overview](#overview)
 - [File Structure](#file-structure)
@@ -28,6 +34,7 @@ The Dashboard List Application is a lightweight, feature-rich task management to
 
 ## ⚡ Quick Start
 
+### Dashboard List
 1. **Open** `index.html` in any modern web browser
 2. **Add tasks** using the input field and press Enter
 3. **Manage tasks** with checkboxes (complete), stars (favorite), and trash icons (delete)
@@ -35,7 +42,31 @@ The Dashboard List Application is a lightweight, feature-rich task management to
 5. **Filter** by status: All, Active, or Completed
 6. Your data **auto-saves** to browser local storage
 
+### Calculator
+1. **Open** `calculator.html` in any modern web browser
+2. **Perform calculations** using buttons or keyboard
+3. **View history** of recent calculations on the right panel
+4. **Clear history** with the dedicated button
+5. Your calculations are **automatically saved**
+
 **That's it!** No installation, no server, no build process needed.
+
+---
+
+## 📱 Applications
+
+### 1. Dashboard List Application
+A comprehensive task management system for organizing and tracking daily activities.
+- **File**: `index.html`, `styles.css`, `script.js`
+- **Features**: Add/edit/delete tasks, search, filter, favorites, statistics
+- **Storage**: Browser local storage for persistence
+
+### 2. Calculator Application
+A full-featured calculator with calculation history and keyboard support.
+- **Files**: `calculator.html`, `calculator-styles.css`, `calculator.js`
+- **Features**: Basic arithmetic, calculation history, keyboard shortcuts, responsive design
+- **Storage**: Calculation history saved to local storage
+- **Navigation**: Easy link back to dashboard from calculator
 
 ---
 
@@ -120,38 +151,60 @@ The Dashboard List Application is a task management tool designed to help users 
 ## 📁 File Structure
 
 ```
-dashboard-list/
-├── index.html          # Main HTML file with structure and markup
-├── style.css           # CSS styling and responsive design
-├── script.js           # JavaScript logic and interactivity
-└── README.md           # This documentation file
+project-root/
+├── index.html                  # Dashboard List main page
+├── styles.css                  # Dashboard styling
+├── script.js                   # Dashboard functionality
+├── calculator.html             # Calculator application
+├── calculator-styles.css       # Calculator styling
+├── calculator.js               # Calculator functionality
+└── README.md                   # This documentation file
 ```
 
 ### File Descriptions
 
-#### `index.html`
-Contains the complete HTML structure including:
+#### Dashboard List Files
+
+**`index.html`**
+- Complete HTML structure for dashboard
 - Input form for adding new items
 - Search and filter controls
 - Statistics dashboard
 - Main list container
-- CSS and JavaScript imports
 
-#### `style.css`
-Includes:
+**`styles.css`**
 - Modern gradient theme with purple color scheme
 - Responsive grid and flexbox layouts
 - Animations and transitions
 - Mobile-first responsive design
 - Component-specific styling
 
-#### `script.js`
-Implements:
+**`script.js`**
 - Item management (add, edit, delete)
 - Local storage persistence
 - Event listeners and handlers
 - Search and filter logic
 - Dynamic DOM manipulation
+
+#### Calculator Files
+
+**`calculator.html`**
+- Calculator interface with buttons
+- Display screen
+- History panel
+- Navigation back to dashboard
+
+**`calculator-styles.css`**
+- Modern calculator design
+- Responsive grid layout for buttons
+- Beautiful gradients and animations
+- Mobile-optimized layout
+
+**`calculator.js`**
+- Calculator logic and operations
+- History management
+- Keyboard support
+- Local storage for calculation history
 
 ### Code Examples
 
@@ -204,42 +257,75 @@ function filterItems(status) {
 
 ### Installation & Running
 
+#### Dashboard List
 1. **Clone or Download** the project files
 2. **Open `index.html`** in your web browser
    - Double-click the file, or
    - Right-click → Open with → Choose your browser, or
    - Drag the file into your browser window
-
 3. **Start Adding Items!** Use the input form to create your first task
+
+#### Calculator
+1. **Open `calculator.html`** in your web browser (same methods as above)
+2. **Start Calculating!** Use buttons or keyboard to enter calculations
+3. **View History** on the right panel to track previous calculations
 
 ---
 
 ## 📖 Usage Guide
 
-### Adding Items
+### Dashboard List
+
+#### Adding Items
 1. Type your task title in the **"Add new task"** input field
 2. *(Optional)* Click the description icon to add more details
 3. Press **Enter** or click the **"+"** button
 4. Your item appears in the list
 
-### Managing Items
+#### Managing Items
 - **Complete Item**: Click the checkbox to mark as done
 - **Favorite Item**: Click the star icon to mark as important
 - **Delete Item**: Click the trash icon (confirmation dialog will appear)
 - **View Description**: Hover over items to see full descriptions
 
-### Searching & Filtering
+#### Searching & Filtering
 - **Search**: Type in the search box to find items by title or description
 - **Filter by Status**:
   - Click **"All"** to view all items
   - Click **"Active"** to see incomplete items only
   - Click **"Completed"** to see finished items only
 
-### Statistics
+#### Statistics
 The dashboard displays:
 - **Total**: Total number of items
 - **Completed**: Number of finished items
 - **Active**: Number of pending items
+
+### Calculator
+
+#### Basic Operations
+1. **Enter Numbers**: Click number buttons or use keyboard (0-9)
+2. **Choose Operation**: Click operator buttons (+, −, ×, ÷) or use keyboard (+, -, *, /)
+3. **Calculate Result**: Click = button or press Enter
+4. **Clear**: Press C button or Escape key to start over
+5. **Backspace**: Click ← or press Backspace to delete last digit
+
+#### Advanced Features
+- **Toggle Sign**: Click ± to change positive/negative numbers
+- **Decimal Numbers**: Click . or press . to add decimal point
+- **History**: All calculations are automatically saved and displayed
+- **Reuse Calculations**: Click any history item to use its result
+- **Clear History**: Use the "Clear History" button to remove all saved calculations
+
+#### Keyboard Shortcuts
+| Key | Action |
+|-----|--------|
+| 0-9 | Enter numbers |
+| + - * / | Operations |
+| Enter or = | Calculate |
+| Backspace | Delete last digit |
+| Escape | Clear all |
+| . | Decimal point |
 
 ---
 
