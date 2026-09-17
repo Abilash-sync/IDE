@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2a2d3e;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --up: #00d4aa;
+      --down: #ff4d6d;
+      --text: #e2e8f0;
+      --muted: #7a7f99;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo svg { color: var(--accent); }
+
+    nav { display: flex; gap: 6px; }
+
+    nav button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    nav button.active, nav button:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      color: var(--text);
+      font-size: 0.875rem;
+      width: 200px;
+    }
+
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      width: 100%;
+      font-size: 0.875rem;
+    }
+
+    .search-bar input::placeholder { color: var(--muted); }
+
+    .avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sidebar-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      padding: 10px 12px 4px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .sidebar-item:hover, .sidebar-item.active {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .sidebar-item.active { color: var(--accent); }
+
+    .watchlist-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.2s;
+    }
+
+    .watchlist-item:hover { background: var(--surface2); }
+
+    .watchlist-ticker { font-weight: 700; font-size: 0.85rem; }
+    .watchlist-name { color: var(--muted); font-size: 0.72rem; margin-top: 1px; }
+
+    .watchlist-price { text-align: right; }
+    .watchlist-change { font-size: 0.72rem; font-weight: 600; }
+    .up { color: var(--up); }
+    .down { color: var(--down); }
+
+    /* ── Main ── */
+    main {
+      padding: 28px 32px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── Stat Cards ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover { border-color: var(--accent); }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+
+    .stat-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    .stat-value { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+
+    .stat-sub {
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Chart + Table row ── */
+    .main-row {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    /* ── Chart Card ── */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .card-title { font-size: 1rem; font-weight: 600; }
+    .card-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    .time-filters { display: flex; gap: 4px; }
+
+    .tf-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tf-btn.active, .tf-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 220px;
+    }
+
+    canvas { width: 100% !important; }
+
+    /* ── Top Movers ── */
+    .movers-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mover-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mover-item:last-child { border-bottom: none; }
+
+    .mover-logo {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .mover-info { flex: 1; }
+    .mover-ticker { font-weight: 700; font-size: 0.88rem; }
+    .mover-name { font-size: 0.72rem; color: var(--muted); }
+
+    .mover-right { text-align: right; }
+    .mover-price { font-weight: 600; font-size: 0.88rem; }
+    .mover-pct {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    .mover-pct.up { background: rgba(0,212,170,0.15); color: var(--up); }
+    .mover-pct.down { background: rgba(255,77,109,0.15); color: var(--down); }
+
+    /* Mini sparkline bars */
+    .spark {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 28px;
+    }
+
+    .spark-bar {
+      width: 4px;
+      border-radius: 2px;
+      transition: height 0.3s;
+    }
+
+    /* ── Holdings Table ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 12px 14px;
+    }
+
+    thead th:last-child { text-align: right; }
+
+    tbody tr {
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover { background: var(--surface2); }
+
+    tbody td {
+      padding: 13px 12px;
+      vertical-align: middle;
+    }
+
+    tbody td:last-child { text-align: right; }
+
+    .ticker-cell { display: flex; align-items: center; gap: 10px; }
+
+    .ticker-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+    .ticker-sym { font-weight: 700; }
+    .ticker-nm { font-size: 0.72rem; color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .badge-up { background: rgba(0,212,170,0.12); color: var(--up); }
+    .badge-down { background: rgba(255,77,109,0.12); color: var(--down); }
+
+    /* ── News ── */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .news-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .news-item:last-child { border-bottom: none; }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .news-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .news-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .news-item:hover .news-title { color: var(--accent); }
+
+    /* ── Sector ── */
+    .sector-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sector-item:last-child { border-bottom: none; }
+
+    .sector-name { font-size: 0.85rem; flex: 1; }
+
+    .sector-bar-wrap {
+      flex: 2;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .sector-bar {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .sector-pct { font-size: 0.8rem; font-weight: 600; width: 50px; text-align: right; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    @media (max-width: 1200px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .main-row { grid-template-columns: 1fr; }
+      .bottom-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { display: none; }
+      main { padding: 16px; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+    </svg>
+    StockView
+  </div>
+  <nav>
+    <button class="active">Dashboard</button>
+    <button>Portfolio</button>
+    <button>Markets</button>
+    <button>News</button>
+  </nav>
+  <div class="header-right">
+    <div class="search-bar">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Search ticker…" />
+    </div>
+    <div class="avatar">JD</div>
+  </div>
+</header>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside>
+    <div class="sidebar-label">Menu</div>
+    <div class="sidebar-item active">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+      Overview
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      Analytics
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      Holdings
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      History
+    </div>
+
+    <div class="sidebar-label" style="margin-top:10px">Watchlist</div>
+    <div id="watchlist"></div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main>
+
+    <!-- Stat Cards -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Portfolio Value</span>
+          <div class="stat-icon" style="background:rgba(108,99,255,.15)">💼</div>
+        </div>
+        <div class="stat-value">$84,230<span style="font-size:.9rem;color:var(--muted)">.56</span></div>
+        <div class="stat-sub up">▲ +2.4% <span style="color:var(--muted)">vs yesterday</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Today's Gain</span>
+          <div class="stat-icon" style="background:rgba(0,212,170,.12)">📈</div>
+        </div>
+        <div class="stat-value up">+$1,982<span style="font-size:.9rem">.40</span></div>
+        <div class="stat-sub up">▲ +2.41% <span style="color:var(--muted)">today</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total Invested</span>
+          <div class="stat-icon" style="background:rgba(255,77,109,.12)">🏦</div>
+        </div>
+        <div class="stat-value">$62,500<span style="font-size:.9rem;color:var(--muted)">.00</span></div>
+        <div class="stat-sub up">▲ +34.77% <span style="color:var(--muted)">all time</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Open Positions</span>
+          <div class="stat-icon" style="background:rgba(108,99,255,.15)">📊</div>
+        </div>
+        <div class="stat-value">12</div>
+        <div class="stat-sub" style="color:var(--muted)">Across 5 sectors</div>
+      </div>
+    </div>
+
+    <!-- Chart + Movers -->
+    <div class="main-row">
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Portfolio Performance</div>
+            <div class="card-sub">AAPL · $192.35 <span class="up">+1.24%</span></div>
+          </div>
+          <div class="time-filters">
+            <button class="tf-btn">1D</button>
+            <button class="tf-btn active">1W</button>
+            <button class="tf-btn">1M</button>
+            <button class="tf-btn">3M</button>
+            <button class="tf-btn">1Y</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+
+      <div class="movers-card">
+        <div class="card-header">
+          <div class="card-title">Top Movers</div>
+        </div>
+        <div id="movers"></div>
+      </div>
+    </div>
+
+    <!-- Holdings Table -->
+    <div class="table-card">
+      <div class="card-header">
+        <div class="card-title">Holdings</div>
+        <button class="tf-btn active" style="border:1px solid var(--border)">+ Add Position</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Price</th>
+            <th>24h Change</th>
+            <th>Shares</th>
+            <th>Avg Cost</th>
+            <th>Market Value</th>
+            <th>P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsTable"></tbody>
+      </table>
+    </div>
+
+    <!-- News + Sector -->
+    <div class="bottom-row">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">Market News</div>
+          <span style="font-size:.78rem;color:var(--accent);cursor:pointer">View all →</span>
+        </div>
+        <div id="news"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">Sector Performance</div>
+          <span style="font-size:.78rem;color:var(--muted)">Today</span>
+        </div>
+        <div id="sectors"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────
+const watchlistData = [
+  { ticker:'AAPL', name:'Apple Inc.',    price:'192.35', chg:'+1.24%', up:true  },
+  { ticker:'MSFT', name:'Microsoft',     price:'415.20', chg:'+0.87%', up:true  },
+  { ticker:'TSLA', name:'Tesla Inc.',    price:'248.50', chg:'-2.13%', up:false },
+  { ticker:'NVDA', name:'NVIDIA Corp.',  price:'875.10', chg:'+3.41%', up:true  },
+  { ticker:'AMZN', name:'Amazon',        price:'185.60', chg:'-0.54%', up:false },
+  { ticker:'GOOGL',name:'Alphabet',      price:'174.30', chg:'+0.63%', up:true  },
+];
+
+const moversData = [
+  { ticker:'NVDA', name:'NVIDIA',   price:'875.10', pct:'+3.41', up:true,  color:'#7c3aed', spark:[4,7,5,9,6,10,8,13,11,16] },
+  { ticker:'META', name:'Meta',     price:'523.80', pct:'+2.78', up:true,  color:'#2563eb', spark:[5,6,4,8,7,9,8,10,11,14] },
+  { ticker:'TSLA', name:'Tesla',    price:'248.50', pct:'-2.13', up:false, color:'#dc2626', spark:[12,10,9,11,8,7,9,6,5,4] },
+  { ticker:'BABA', name:'Alibaba',  price:'81.40',  pct:'-1.87', up:false, color:'#ea580c', spark:[10,8,9,7,6,8,5,6,4,3] },
+  { ticker:'AMD',  name:'AMD',      price:'168.90', pct:'+1.95', up:true,  color:'#0891b2', spark:[3,4,5,4,6,7,6,8,9,11] },
+];
+
+const holdingsData = [
+  { ticker:'AAPL', name:'Apple',   price:192.35, chg:1.24,  up:true,  shares:50,  avg:145.20, color:'#6366f1' },
+  { ticker:'MSFT', name:'Microsft',price:415.20, chg:0.87,  up:true,  shares:20,  avg:310.00, color:'#0ea5e9' },
+  { ticker:'NVDA', name:'NVIDIA',  price:875.10, chg:3.41,  up:true,  shares:10,  avg:420.50, color:'#8b5cf6' },
+  { ticker:'TSLA', name:'Tesla',   price:248.50, chg:-2.13, up:false, shares:30,  avg:195.80, color:'#ef4444' },
+  { ticker:'AMZN', name:'Amazon',  price:185.60, chg:-0.54, up:false, shares:15,  avg:130.00, color:'#f59e0b' },
+  { ticker:'GOOGL',name:'Alphabet',price:174.30, chg:0.63,  up:true,  shares:25,  avg:140.20, color:'#10b981' },
+];
+
+const newsData = [
+  { source:'Bloomberg',  time:'2 min ago',  title:'Fed signals potential rate cut in Q3 as inflation cools' },
+  { source:'CNBC',       time:'18 min ago', title:'NVIDIA shares surge on record data-center revenue beat' },
+  { source:'Reuters',    time:'45 min ago', title:'Tesla faces headwinds as EV demand softens in Europe' },
+  { source:'WSJ',        time:'1 hr ago',   title:'Apple\'s services revenue hits all-time high in Q2 2024' },
+  { source:'FT',         time:'2 hrs ago',  title:'S&P 500 closes at record high amid strong earnings season' },
+];
+
+const sectorData = [
+  { name:'Technology',   pct:3.2,  up:true  },
+  { name:'Healthcare',   pct:1.1,  up:true  },
+  { name:'Financials',   pct:0.7,  up:true  },
+  { name:'Energy',       pct:-1.4, up:false },
+  { name:'Consumer',     pct:-0.5, up:false },
+  { name:'Utilities',    pct:0.3,  up:true  },
+];
+
+// ── RENDER WATCHLIST ──────────────────────────────────
+const wlEl = document.getElementById('watchlist');
+watchlistData.forEach(s => {
+  wlEl.innerHTML += `
+    <div class="watchlist-item">
+      <div><div class="watchlist-ticker">${s.ticker}</div><div class="watchlist-name">${s.name}</div></div>
+      <div class="watchlist-price">
+        <div style="font-weight:600;font-size:.82rem">$${s.price}</div>
+        <div class="watchlist-change ${s.up?'up':'down'}">${s.chg}</div>
+      </div>
+    </div>`;
+});
+
+// ── RENDER MOVERS ──────────────────────────────────────
+const movEl = document.getElementById('movers');
+moversData.forEach(m => {
+  const bars = m.spark.map(h => {
+    const hpct = Math.round((h / 16) * 100);
+    const col = m.up ? 'var(--up)' : 'var(--down)';
+    return `<div class="spark-bar" style="height:${hpct}%;background:${col}"></div>`;
+  }).join('');
+
+  movEl.innerHTML += `
+    <div class="mover-item">
+      <div class="mover-logo" style="background:${m.color}22;color:${m.color}">${m.ticker.slice(0,2)}</div>
+      <div class="mover-info">
+        <div class="mover-ticker">${m.ticker}</div>
+        <div class="mover-name">${m.name}</div>
+      </div>
+      <div class="spark" style="margin-right:10px">${bars}</div>
+      <div class="mover-right">
+        <div class="mover-price">$${m.price}</div>
+        <div class="mover-pct ${m.up?'up':'down'}">${m.up?'+':''}${m.pct}%</div>
+      </div>
+    </div>`;
+});
+
+// ── RENDER HOLDINGS TABLE ──────────────────────────────
+const tbody = document.getElementById('holdingsTable');
+holdingsData.forEach(h => {
+  const mv = (h.price * h.shares).toFixed(2);
+  const pl = ((h.price - h.avg) * h.shares).toFixed(2);
+  const plPct = (((h.price - h.avg) / h.avg) * 100).toFixed(2);
+  tbody.innerHTML += `
+    <tr>
+      <td>
+        <div class="ticker-cell">
+          <div class="ticker-icon" style="background:${h.color}22;color:${h.color}">${h.ticker.slice(0,2)}</div>
+          <div><div class="ticker-sym">${h.ticker}</div><div class="ticker-nm">${h.name}</div></div>
+        </div>
+      </td>
+      <td style="font-weight:600">$${h.price.toFixed(2)}</td>
+      <td><span class="badge ${h.up?'badge-up':'badge-down'}">${h.up?'+':''}${h.chg}%</span></td>
+      <td>${h.shares}</td>
+      <td style="color:var(--muted)">$${h.avg.toFixed(2)}</td>
+      <td style="font-weight:600">$${Number(mv).toLocaleString()}</td>
+      <td class="${Number(pl)>=0?'up':'down'}" style="font-weight:600">${Number(pl)>=0?'+':''}$${Number(pl).toLocaleString()} <span style="font-size:.72rem">(${plPct}%)</span></td>
+    </tr>`;
+});
+
+// ── RENDER NEWS ────────────────────────────────────────
+const newsEl = document.getElementById('news');
+newsData.forEach(n => {
+  newsEl.innerHTML += `
+    <div class="news-item">
+      <div class="news-meta">
+        <span>${n.source}</span>
+        <div class="news-dot"></div>
+        <span>${n.time}</span>
+      </div>
+      <div class="news-title">${n.title}</div>
+    </div>`;
+});
+
+// ── RENDER SECTORS ──────────────────────────────────────
+const secEl = document.getElementById('sectors');
+sectorData.forEach(s => {
+  const width = Math.abs(s.pct) / 3.5 * 100;
+  const col = s.up ? 'var(--up)' : 'var(--down)';
+  secEl.innerHTML += `
+    <div class="sector-item">
+      <span class="sector-name">${s.name}</span>
+      <div class="sector-bar-wrap">
+        <div class="sector-bar" style="width:${width}%;background:${col}"></div>
+      </div>
+      <span class="sector-pct ${s.up?'up':'down'}">${s.up?'+':''}${s.pct}%</span>
+    </div>`;
+});
+
+// ── CHART.JS LINE CHART ────────────────────────────────
+const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const values = [80200, 81500, 80800, 82400, 83100, 82600, 84230];
+
+const ctx = document.getElementById('lineChart').getContext('2d');
+
+const gradient = ctx.createLinearGradient(0, 0, 0, 220);
+gradient.addColorStop(0, 'rgba(108,99,255,0.35)');
+gradient.addColorStop(1, 'rgba(108,99,255,0.00)');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      data: values,
+      borderColor: '#6c63ff',
+      borderWidth: 2.5,
+      fill: true,
+      backgroundColor: gradient,
+      tension: 0.45,
+      pointRadius: 4,
+      pointBackgroundColor: '#6c63ff',
+      pointBorderColor: '#1a1d27',
+      pointBorderWidth: 2,
+      pointHoverRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#22263a',
+        borderColor: '#2a2d3e',
+        borderWidth: 1,
+        titleColor: '#7a7f99',
+        bodyColor: '#e2e8f0',
+        padding: 12,
+        callbacks: {
+          label: ctx => ` $${ctx.parsed.y.toLocaleString()}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(42,45,62,0.6)' },
+        ticks: { color: '#7a7f99', font: { size: 12 } }
+      },
+      y: {
+        grid: { color: 'rgba(42,45,62,0.6)' },
+        ticks: {
+          color: '#7a7f99',
+          font: { size: 12 },
+          callback: v => '$' + (v/1000).toFixed(0) + 'k'
+        }
+      }
+    }
+  }
+});
+
+// ── NAV INTERACTIVITY ──────────────────────────────────
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.time-filters').querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.sidebar-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
