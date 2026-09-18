@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BikeRide - Bike Taxi Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #1B9CFC;
+            --light: #F7F7F7;
+            --dark: #2C2C2C;
+            --border: #E0E0E0;
+            --success: #2ECC71;
+            --warning: #F39C12;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .bike-icon {
+            font-size: 32px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Bike Selection */
+        .bike-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bike-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .bike-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.2);
+        }
+
+        .bike-card.selected {
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .bike-card-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .bike-card-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .bike-card-price {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Price Estimation */
+        .price-estimate {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .price-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .price-row.total {
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Status */
+        .status {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .status-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .status h2 {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .status p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* Driver Card */
+        .driver-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .driver-rating {
+            font-size: 13px;
+            color: var(--warning);
+        }
+
+        .trip-details {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .trip-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trip-detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .trip-detail-label {
+            color: #888;
+        }
+
+        .trip-detail-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Loading Animation */
+        .spinner {
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .bike-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span class="bike-icon">🏍️</span>
+                BikeRide
+            </h1>
+            <p>Fast & Eco-Friendly Transportation</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="booking">Booking</button>
+                <button class="tab-btn" data-tab="tracking">My Rides</button>
+                <button class="tab-btn" data-tab="profile">Profile</button>
+            </div>
+
+            <!-- Booking Tab -->
+            <div id="booking" class="tab-content active">
+                <div class="form-group">
+                    <label>Pickup Location</label>
+                    <div class="input-wrapper">
+                        <span style="position: absolute; left: 15px; color: var(--primary); font-size: 16px;">📍</span>
+                        <input type="text" id="pickup" placeholder="Enter pickup address" value="123 Main Street">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dropoff Location</label>
+                    <div class="input-wrapper">
+                        <span style="position: absolute; left: 15px; color: var(--primary); font-size: 16px;">🎯</span>
+                        <input type="text" id="dropoff" placeholder="Enter destination" value="456 Park Avenue">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Bike Type</label>
+                    <div class="bike-options">
+                        <div class="bike-card selected" data-bike="standard" data-price="5.99">
+                            <div class="bike-card-icon">🚲</div>
+                            <div class="bike-card-name">Standard</div>
+                            <div class="bike-card-price">$5.99</div>
+                        </div>
+                        <div class="bike-card" data-bike="electric" data-price="7.99">
+                            <div class="bike-card-icon">⚡</div>
+                            <div class="bike-card-name">E-Bike</div>
+                            <div class="bike-card-price">$7.99</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Passenger Name</label>
+                    <input type="text" id="name" placeholder="Your name" value="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Your phone number" value="555-123-4567">
+                </div>
+
+                <div class="price-estimate">
+                    <div class="price-row">
+                        <span>Base Fare</span>
+                        <span>$5.99</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Distance (2.5 km)</span>
+                        <span>$3.50</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Service Fee</span>
+                        <span>$0.50</span>
+                    </div>
+                    <div class="price-row total">
+                        <span>Total Estimated</span>
+                        <span id="total-price">$9.99</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="bookBtn">Book Now</button>
+            </div>
+
+            <!-- Tracking Tab -->
+            <div id="tracking" class="tab-content">
+                <div id="tracking-content">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <p style="color: #888; font-size: 14px;">No active rides yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class="tab-content">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" value="John Doe" readonly style="background: var(--light);">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="john@example.com" readonly style="background: var(--light);">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" value="555-123-4567" readonly style="background: var(--light);">
+                </div>
+
+                <div class="form-group">
+                    <label>Total Rides</label>
+                    <input type="text" value="24 rides" readonly style="background: var(--light);">
+                </div>
+
+                <div class="form-group">
+                    <label>Rating</label>
+                    <input type="text" value="⭐ 4.8 / 5.0" readonly style="background: var(--light);">
+                </div>
+
+                <button class="btn btn-secondary" style="margin-top: 20px;">Edit Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div id="confirmationModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="status">
+                <div class="status-icon" id="modalIcon">🔍</div>
+                <h2 id="modalTitle">Finding Driver...</h2>
+                <p id="modalMessage">Please wait while we find the best driver for you</p>
+                <div id="spinner" class="spinner"></div>
+                <div id="driverInfo" style="display: none; margin-top: 20px;">
+                    <div class="driver-card">
+                        <div class="driver-avatar">👨</div>
+                        <div class="driver-info">
+                            <div class="driver-name" id="driverName">Mike Johnson</div>
+                            <div class="driver-rating" id="driverRating">⭐ 4.9 (156 rides)</div>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <div class="trip-detail-row">
+                            <span class="trip-detail-label">Pickup in</span>
+                            <span class="trip-detail-value" id="arrivalTime">2 minutes</span>
+                        </div>
+                        <div class="trip-detail-row">
+                            <span class="trip-detail-label">Vehicle</span>
+                            <span class="trip-detail-value" id="vehicleType">Standard Bike</span>
+                        </div>
+                        <div class="trip-detail-row">
+                            <span class="trip-detail-label">License Plate</span>
+                            <span class="trip-detail-value" id="licensePlate">BIKE 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-secondary" id="cancelBtn" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" id="confirmBtn" style="display: none;" onclick="completeBooking()">Confirm Pickup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Bike selection
+        document.querySelectorAll('.bike-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.bike-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                updatePrice();
+            });
+        });
+
+        // Price update
+        function updatePrice() {
+            const selectedBike = document.querySelector('.bike-card.selected');
+            const price = parseFloat(selectedBike.dataset.price);
+            document.getElementById('total-price').textContent = '$' + (price + 3.50 + 0.50).toFixed(2);
+        }
+
+        // Book button
+        document.getElementById('bookBtn').addEventListener('click', () => {
+            const pickup = document.getElementById('pickup').value;
+            const dropoff = document.getElementById('dropoff').value;
+            const name = document.getElementById('name').value;
+
+            if (!pickup || !dropoff || !name) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            showModal();
+        });
+
+        function showModal() {
+            document.getElementById('confirmationModal').style.display = 'flex';
+            
+            // Simulate finding driver after 3 seconds
+            setTimeout(() => {
+                const modalIcon = document.getElementById('modalIcon');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalMessage = document.getElementById('modalMessage');
+                const spinner = document.getElementById('spinner');
+                const driverInfo = document.getElementById('driverInfo');
+                const confirmBtn = document.getElementById('confirmBtn');
+
+                modalIcon.textContent = '✓';
+                modalIcon.style.color = 'var(--success)';
+                modalTitle.textContent = 'Driver Found!';
+                modalMessage.textContent = 'Your driver is arriving soon';
+                spinner.style.display = 'none';
+                driverInfo.style.display = 'block';
+                confirmBtn.style.display = 'block';
+            }, 3000);
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            resetModal();
+        }
+
+        function completeBooking() {
+            const selectedBike = document.querySelector('.bike-card.selected').dataset.bike;
+            const pickup = document.getElementById('pickup').value;
+            const dropoff = document.getElementById('dropoff').value;
+            const price = document.getElementById('total-price').textContent;
+
+            alert(`✅ Booking Confirmed!\n\nBike Type: ${selectedBike.toUpperCase()}\nPickup: ${pickup}\nDropoff: ${dropoff}\nPrice: ${price}\n\nYour driver is on the way!`);
+            
+            closeModal();
+            resetModal();
+            resetForm();
+        }
+
+        function resetModal() {
+            document.getElementById('modalIcon').textContent = '🔍';
+            document.getElementById('modalIcon').style.color = 'inherit';
+            document.getElementById('modalTitle').textContent = 'Finding Driver...';
+            document.getElementById('modalMessage').textContent = 'Please wait while we find the best driver for you';
+            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('driverInfo').style.display = 'none';
+            document.getElementById('confirmBtn').style.display = 'none';
+        }
+
+        function resetForm() {
+            document.getElementById('pickup').value = '';
+            document.getElementById('dropoff').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('confirmationModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmationModal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
