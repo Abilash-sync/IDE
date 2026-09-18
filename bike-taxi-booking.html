@@ -416,10 +416,10 @@
         <!-- Header -->
         <div class="header">
             <h1>
-                <span class="bike-icon">🏍️</span>
-                BikeRide
+                <span class="bike-icon">🚗</span>
+                RideHub
             </h1>
-            <p>Fast & Eco-Friendly Transportation</p>
+            <p>Car & Auto Taxi Booking Service</p>
         </div>
 
         <!-- Content -->
@@ -450,17 +450,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Select Bike Type</label>
-                    <div class="bike-options">
-                        <div class="bike-card selected" data-bike="standard" data-price="5.99">
-                            <div class="bike-card-icon">🚲</div>
-                            <div class="bike-card-name">Standard</div>
-                            <div class="bike-card-price">$5.99</div>
+                    <label>Select Vehicle Type</label>
+                    <div class="vehicle-options">
+                        <div class="vehicle-card selected" data-vehicle="auto" data-price="8.99">
+                            <div class="vehicle-card-icon">🚕</div>
+                            <div class="vehicle-card-name">Auto</div>
+                            <div class="vehicle-card-price">$8.99</div>
                         </div>
-                        <div class="bike-card" data-bike="electric" data-price="7.99">
-                            <div class="bike-card-icon">⚡</div>
-                            <div class="bike-card-name">E-Bike</div>
-                            <div class="bike-card-price">$7.99</div>
+                        <div class="vehicle-card" data-vehicle="car" data-price="12.99">
+                            <div class="vehicle-card-icon">🚙</div>
+                            <div class="vehicle-card-name">Car</div>
+                            <div class="vehicle-card-price">$12.99</div>
                         </div>
                     </div>
                 </div>
@@ -478,19 +478,19 @@
                 <div class="price-estimate">
                     <div class="price-row">
                         <span>Base Fare</span>
-                        <span>$5.99</span>
+                        <span>$8.99</span>
                     </div>
                     <div class="price-row">
                         <span>Distance (2.5 km)</span>
-                        <span>$3.50</span>
+                        <span>$5.50</span>
                     </div>
                     <div class="price-row">
                         <span>Service Fee</span>
-                        <span>$0.50</span>
+                        <span>$1.00</span>
                     </div>
                     <div class="price-row total">
                         <span>Total Estimated</span>
-                        <span id="total-price">$9.99</span>
+                        <span id="total-price">$15.49</span>
                     </div>
                 </div>
 
@@ -561,11 +561,11 @@
                         </div>
                         <div class="trip-detail-row">
                             <span class="trip-detail-label">Vehicle</span>
-                            <span class="trip-detail-value" id="vehicleType">Standard Bike</span>
+                            <span class="trip-detail-value" id="vehicleType">Auto - Yellow Taxi</span>
                         </div>
                         <div class="trip-detail-row">
                             <span class="trip-detail-label">License Plate</span>
-                            <span class="trip-detail-value" id="licensePlate">BIKE 2024</span>
+                            <span class="trip-detail-value" id="licensePlate">DL01AB2024</span>
                         </div>
                     </div>
                 </div>
@@ -593,10 +593,10 @@
             });
         });
 
-        // Bike selection
-        document.querySelectorAll('.bike-card').forEach(card => {
+        // Vehicle selection
+        document.querySelectorAll('.vehicle-card').forEach(card => {
             card.addEventListener('click', () => {
-                document.querySelectorAll('.bike-card').forEach(c => c.classList.remove('selected'));
+                document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
                 card.classList.add('selected');
                 updatePrice();
             });
@@ -604,9 +604,9 @@
 
         // Price update
         function updatePrice() {
-            const selectedBike = document.querySelector('.bike-card.selected');
-            const price = parseFloat(selectedBike.dataset.price);
-            document.getElementById('total-price').textContent = '$' + (price + 3.50 + 0.50).toFixed(2);
+            const selectedVehicle = document.querySelector('.vehicle-card.selected');
+            const price = parseFloat(selectedVehicle.dataset.price);
+            document.getElementById('total-price').textContent = '$' + (price + 5.50 + 1.00).toFixed(2);
         }
 
         // Book button
