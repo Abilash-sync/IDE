@@ -3,7 +3,7 @@ import useLocalStorage from './hooks/useLocalStorage.js';
 import BookingForm from './components/BookingForm.jsx';
 import Confirmation from './components/Confirmation.jsx';
 import Dashboard from './components/Dashboard.jsx';
-import { generateReference } from './lib/booking.js';
+import { generateUniqueReference, hasSlotConflict } from './lib/booking.js';
 
 export default function App() {
   const [bookings, setBookings] = useLocalStorage('school-bookings', []);
@@ -11,12 +11,16 @@ export default function App() {
   const [last, setLast] = useState(null);
 
   const add = (values) => {
-    const booking = { ...values, id: generateReference(), status: 'Pending', createdAt: new Date().toISOString() };
+    const booking = { ...values, id: generateUniqueReference(bookings), status: 'Pending', createdAt: new Date().toISOString() };
     setBookings((b) => [...b, booking]);
     setLast(booking);
   };
   const setStatus = (id, status) =>
-    setBookings((b) => b.map((x) => (x.id === id ? { ...x, status } : x)));
+    setBookings((b) => {
+      const target = b.find((x) => x.id === id);
+      if (target && status !== 'Cancelled' && hasSlotConflict(b, target)) return b;
+      return b.map((x) => (x.id === id ? { ...x, status } : x));
+    });
 
   return (
     <>

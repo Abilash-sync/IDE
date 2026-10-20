@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { STATUSES, filterBookings } from '../lib/booking.js';
+import { STATUSES, filterBookings, hasSlotConflict } from '../lib/booking.js';
 
 export default function Dashboard({ bookings, onStatus }) {
   const [status, setStatus] = useState('All');
@@ -38,7 +38,8 @@ export default function Dashboard({ bookings, onStatus }) {
               <div className="side">
                 <span className={`badge ${b.status.toLowerCase()}`}>{b.status}</span>
                 <div className="actions">
-                  <button className="btn small" disabled={b.status === 'Confirmed'}
+                  <button className="btn small" disabled={b.status === 'Confirmed' || (b.status === 'Cancelled' && hasSlotConflict(bookings, b))}
+                    title={b.status === 'Cancelled' && hasSlotConflict(bookings, b) ? 'Slot has been rebooked' : undefined}
                     onClick={() => onStatus(b.id, 'Confirmed')}
                     aria-label={`Confirm booking for ${b.studentName}`}>Confirm</button>
                   <button className="btn small danger" disabled={b.status === 'Cancelled'}

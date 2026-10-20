@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   validateBooking, isWeekday, isPastDate, getBookedSlots, getAvailableSlots,
-  filterBookings, generateReference, parseDate, TIME_SLOTS,
+  filterBookings, generateReference, generateUniqueReference, hasSlotConflict, parseDate, TIME_SLOTS,
 } from './booking.js';
 
 const today = new Date(2025, 5, 11); // Wed 11 Jun 2025
@@ -86,5 +86,21 @@ describe('filterBookings / reference', () => {
   });
   it('generates formatted references', () => {
     expect(generateReference(new Date(2025, 5, 11), () => 0.5)).toMatch(/^SCH-20250611-[0-9A-Z]{4}$/);
+  });
+});
+
+describe('reference and conflict helpers', () => {
+  it('generates a reference not already used', () => {
+    const vals = [0, 0, 0.5];
+    const rand = () => vals.shift();
+    const first = generateReference(new Date(2025, 0, 1), () => 0);
+    const id = generateUniqueReference([{ id: first }], new Date(2025, 0, 1), rand);
+    expect(id).not.toBe(first);
+  });
+  it('detects a conflict with an active booking only', () => {
+    const a = { id: 'a', date: '2025-06-02', slot: '09:00', status: 'Cancelled' };
+    const b = { id: 'b', date: '2025-06-02', slot: '09:00', status: 'Pending' };
+    expect(hasSlotConflict([a, b], a)).toBe(true);
+    expect(hasSlotConflict([a], a)).toBe(false);
   });
 });

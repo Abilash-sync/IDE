@@ -89,6 +89,20 @@ export function generateReference(now = new Date(), rand = Math.random) {
   return `SCH-${toDateString(now).replace(/-/g, '')}-${suffix}`;
 }
 
+export function generateUniqueReference(bookings, now = new Date(), rand = Math.random) {
+  let id;
+  do id = generateReference(now, rand);
+  while (bookings.some((b) => b.id === id));
+  return id;
+}
+
+/** True if re-activating this booking would clash with another active booking. */
+export function hasSlotConflict(bookings, booking) {
+  return bookings.some(
+    (b) => b.id !== booking.id && b.status !== 'Cancelled' && b.date === booking.date && b.slot === booking.slot,
+  );
+}
+
 export function filterBookings(bookings, { status = 'All', query = '' } = {}) {
   const q = query.trim().toLowerCase();
   return bookings.filter((b) => {
