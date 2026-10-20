@@ -1,87 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IronPulse Gym – Admission</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-content">
-                <h1>📊 My Dashboard</h1>
-                <p class="subtitle">Manage your tasks and items</p>
-            </div>
-        </header>
-
-        <!-- Search and Controls -->
-        <div class="dashboard-controls">
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search items..." 
-                    class="search-input"
-                >
-            </div>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="active">Active</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-            </div>
-        </div>
-
-        <!-- Add New Item -->
-        <div class="add-item-section">
-            <div class="input-group">
-                <input 
-                    type="text" 
-                    id="itemInput" 
-                    placeholder="Add a new item..." 
-                    class="item-input"
-                >
-                <input 
-                    type="text" 
-                    id="descriptionInput" 
-                    placeholder="Description (optional)" 
-                    class="item-input"
-                >
-                <button id="addBtn" class="btn-add">+ Add Item</button>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="dashboard-stats">
-            <div class="stat-card">
-                <span class="stat-label">Total Items</span>
-                <span class="stat-value" id="totalItems">0</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Completed</span>
-                <span class="stat-value" id="completedItems">0</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Active</span>
-                <span class="stat-value" id="activeItems">0</span>
-            </div>
-        </div>
-
-        <!-- Dashboard List -->
-        <div class="dashboard-list-section">
-            <div class="list-header">
-                <h2>Items</h2>
-                <span class="item-count" id="itemCount">(0)</span>
-            </div>
-            <div id="dashboardList" class="dashboard-list">
-                <div class="empty-state">
-                    <p>✨ No items yet. Add one to get started!</p>
-                </div>
-            </div>
-        </div>
+<a class="skip" href="#admission">Skip to admission form</a>
+<header class="site-header">
+  <div class="container nav">
+    <a class="logo" href="#home">Iron<span>Pulse</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#plans">Plans</a></li>
+        <li><a href="#admission">Join Now</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+  <section id="home" class="hero">
+    <div class="container">
+      <h1>Build Strength. Build Habits. Build You.</h1>
+      <p>Modern equipment, expert trainers and flexible timings. Join IronPulse today.</p>
+      <a class="btn" href="#admission">Get Admission</a>
     </div>
+  </section>
 
-    <script src="script.js"></script>
+  <section id="plans" class="container section">
+    <h2>Membership Plans</h2>
+    <div class="plans">
+      <article class="card">
+        <h3>Basic</h3>
+        <p class="price">$20<small>/month</small></p>
+        <ul><li>Gym floor access</li><li>Locker room</li><li>Off-peak hours</li></ul>
+        <a class="btn outline" href="#admission">Choose Basic</a>
+      </article>
+      <article class="card featured">
+        <h3>Standard</h3>
+        <p class="price">$40<small>/month</small></p>
+        <ul><li>All Basic features</li><li>Group classes</li><li>Any-time access</li></ul>
+        <a class="btn" href="#admission">Choose Standard</a>
+      </article>
+      <article class="card">
+        <h3>Premium</h3>
+        <p class="price">$70<small>/month</small></p>
+        <ul><li>All Standard features</li><li>Personal trainer</li><li>Diet plan &amp; sauna</li></ul>
+        <a class="btn outline" href="#admission">Choose Premium</a>
+      </article>
+    </div>
+  </section>
+
+  <section id="admission" class="container section">
+    <h2>Admission Form</h2>
+    <form action="#" method="post" class="form">
+      <p class="note">Fields marked <span aria-hidden="true">*</span><span class="sr"> with asterisk</span> are required.</p>
+      <fieldset>
+        <legend>Personal Details</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="name">Full Name *</label>
+            <input id="name" name="name" type="text" required minlength="2" maxlength="80" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="phone">Phone *</label>
+            <input id="phone" name="phone" type="tel" required pattern="[0-9+\-\s]{7,15}" title="7–15 digits, may include + - and spaces" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="dob">Date of Birth *</label>
+            <input id="dob" name="dob" type="date" required min="1940-01-01" max="2010-12-31">
+          </div>
+        </div>
+        <div class="field">
+          <label for="gender">Gender *</label>
+          <select id="gender" name="gender" required>
+            <option value="">Select…</option>
+            <option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="address">Address *</label>
+          <textarea id="address" name="address" rows="3" required minlength="10" autocomplete="street-address"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Membership</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="plan">Plan *</label>
+            <select id="plan" name="plan" required>
+              <option value="">Select a plan…</option>
+              <option value="basic">Basic – $20/month</option>
+              <option value="standard">Standard – $40/month</option>
+              <option value="premium">Premium – $70/month</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="batch">Preferred Batch / Timing *</label>
+            <select id="batch" name="batch" required>
+              <option value="">Select…</option>
+              <option>Early Morning (5–8 AM)</option>
+              <option>Morning (8–11 AM)</option>
+              <option>Afternoon (12–4 PM)</option>
+              <option>Evening (5–8 PM)</option>
+              <option>Night (8–10 PM)</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Emergency &amp; Health</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="ec-name">Emergency Contact Name *</label>
+            <input id="ec-name" name="ec_name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="ec-phone">Emergency Contact Phone *</label>
+            <input id="ec-phone" name="ec_phone" type="tel" required pattern="[0-9+\-\s]{7,15}" title="7–15 digits, may include + - and spaces">
+          </div>
+        </div>
+        <div class="field">
+          <label for="health">Health Conditions (optional)</label>
+          <textarea id="health" name="health" rows="4" maxlength="500" aria-describedby="health-hint"></textarea>
+          <small id="health-hint">Injuries, allergies, medication, etc. Max 500 characters.</small>
+        </div>
+      </fieldset>
+
+      <div class="check">
+        <input id="terms" name="terms" type="checkbox" required>
+        <label for="terms">I agree to the terms and conditions and confirm the information is accurate. *</label>
+      </div>
+      <button class="btn" type="submit">Submit Admission</button>
+    </form>
+  </section>
+</main>
+<footer class="site-footer"><div class="container">© IronPulse Gym. All rights reserved.</div></footer>
 </body>
 </html>

@@ -1,0 +1,53 @@
+:root{--primary:#ff4d2e;--primary-dark:#d93a1e;--dark:#14161a;--text:#2a2d34;--muted:#6b7280;--bg:#f6f7f9;--card:#fff;--border:#d9dce2;--radius:12px;--shadow:0 6px 24px rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+.container{width:min(1100px,92%);margin-inline:auto}
+.section{padding:3.5rem 0}
+h1,h2,h3{line-height:1.2;margin:0 0 .75rem}
+h2{text-align:center;font-size:2rem;margin-bottom:2rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.skip{position:absolute;left:-999px;background:#fff;padding:.5rem}
+.skip:focus{left:0;z-index:20}
+.site-header{background:var(--dark);position:sticky;top:0;z-index:10}
+.nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.9rem 0}
+.logo{color:#fff;font-weight:800;font-size:1.4rem;text-decoration:none}
+.logo span{color:var(--primary)}
+nav ul{display:flex;gap:1.5rem;list-style:none;margin:0;padding:0}
+nav a{color:#e5e7eb;text-decoration:none;font-weight:500}
+nav a:hover{color:var(--primary)}
+a:focus-visible,button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.hero{background:linear-gradient(135deg,rgba(20,22,26,.92),rgba(60,20,12,.85)),var(--dark);color:#fff;text-align:center;padding:6rem 0}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);max-width:18ch;margin-inline:auto}
+.hero p{max-width:50ch;margin:0 auto 1.8rem;color:#d1d5db}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:2px solid var(--primary);padding:.8rem 1.6rem;border-radius:999px;font:inherit;font-weight:600;text-decoration:none;cursor:pointer;transition:background .2s}
+.btn:hover{background:var(--primary-dark);border-color:var(--primary-dark)}
+.btn.outline{background:transparent;color:var(--primary)}
+.btn.outline:hover{background:var(--primary);color:#fff}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;align-items:stretch}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;text-align:center;display:flex;flex-direction:column;border:2px solid transparent}
+.card.featured{border-color:var(--primary);transform:scale(1.03)}
+.price{font-size:2.5rem;font-weight:800;margin:.25rem 0}
+.price small{font-size:1rem;color:var(--muted);font-weight:400}
+.card ul{list-style:none;padding:0;margin:1rem 0 1.5rem;flex:1}
+.card li{padding:.4rem 0;border-bottom:1px solid var(--border)}
+.form{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);max-width:800px;margin-inline:auto}
+.note{color:var(--muted);margin-top:0}
+fieldset{border:1px solid var(--border);border-radius:var(--radius);margin:0 0 1.5rem;padding:1rem 1.25rem}
+legend{font-weight:700;padding:0 .5rem;color:var(--primary-dark)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 1.25rem}
+.field{display:flex;flex-direction:column;margin-bottom:1rem}
+label{font-weight:600;margin-bottom:.3rem}
+input,select,textarea{font:inherit;padding:.65rem .8rem;border:1px solid var(--border);border-radius:8px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:3px solid rgba(255,77,46,.3);border-color:var(--primary)}
+input:user-invalid,select:user-invalid,textarea:user-invalid{border-color:#c62828}
+input:user-valid,textarea:user-valid{border-color:#2e7d32}
+small{color:var(--muted);margin-top:.25rem}
+.check{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:1.5rem}
+.check input{width:auto;margin-top:.35rem;accent-color:var(--primary)}
+.check label{margin:0;font-weight:400}
+.form .btn{width:100%}
+.site-footer{background:var(--dark);color:#9ca3af;text-align:center;padding:1.5rem 0}
+@media (max-width:800px){.plans{grid-template-columns:1fr}.card.featured{transform:none}}
+@media (max-width:600px){.grid{grid-template-columns:1fr}.form{padding:1.25rem}.hero{padding:4rem 0}nav ul{gap:1rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
